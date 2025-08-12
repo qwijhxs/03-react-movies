@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { fetchMovies } from '../../services/movieService';
-import type { Movie } from '../../types/movie';
-import SearchBar from '../SearchBar/SearchBar';
+import type { Movie } from '../../models/movie';
+import { SearchBar } from '../SearchBar/SearchBar';
 import MovieGrid from '../MovieGrid/MovieGrid';
 import Loader from '../Loader/Loader';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
@@ -50,8 +50,8 @@ export default function App() {
 
     return (
         <>
-            <SearchBar onSubmit={handleSearch} />
-            
+            <SearchBar onSearch={handleSearch} />
+
             {loading && <Loader />}
             {error && <ErrorMessage />}
             {movies.length > 0 && !loading && !error && (
