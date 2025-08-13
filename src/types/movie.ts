@@ -1,4 +1,12 @@
-import type { Movie } from '../models/movie';
+export interface Movie {
+  id: number;
+  title: string;
+  overview: string;
+  poster_path: string;
+  backdrop_path: string;
+  release_date: string;
+  vote_average: number;
+}
 
 export interface MoviesResponse {
   page: number;

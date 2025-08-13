@@ -1,28 +1,50 @@
-import { toast } from 'react-hot-toast';
+import type { FormEvent } from 'react';
+import toast from 'react-hot-toast';
+import styles from './SearchBar.module.css';
 
-export interface SearchBarProps {
-  onSearch: (query: string) => void;
+interface SearchBarProps {
+  onSubmit: (query: string) => void;
 }
 
-export function SearchBar({ onSearch }: SearchBarProps) {
-  async function handleSubmit(formData: FormData) {
-    const query = formData.get('query')?.toString().trim();
+export function SearchBar({ onSubmit }: SearchBarProps) {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const query = (form.elements.namedItem('query') as HTMLInputElement).value.trim();
+    
     if (!query) {
-      toast.error('Please enter a search query!');
+      toast.error('Please enter your search query.');
       return;
     }
-    onSearch(query);
-  }
+    
+    onSubmit(query);
+  };
 
   return (
-    <form action={handleSubmit}>
-      <input
-        name="query"
-        type="text"
-        placeholder="Search movies..."
-        autoComplete="off"
-      />
-      <button type="submit">Search</button>
-    </form>
+    <header className={styles.header}>
+      <div className={styles.container}>
+        <a
+          className={styles.link}
+          href="https://www.themoviedb.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by TMDB
+        </a>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <input
+            className={styles.input}
+            type="text"
+            name="query"
+            autoComplete="off"
+            placeholder="Search movies..."
+            autoFocus
+          />
+          <button className={styles.button} type="submit">
+            Search
+          </button>
+        </form>
+      </div>
+    </header>
   );
 }
