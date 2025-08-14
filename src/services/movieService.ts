@@ -1,30 +1,19 @@
-import axios from 'axios';
-import type { MoviesResponse } from '../types/movie';
+import axios from "axios";
 
-const BASE_URL = 'https://api.themoviedb.org/3';
+import { type Movie } from "../types/movie";
+interface MovieHttpResponse {
+    results: Movie[]
+}
 
-export const fetchMovies = async (query: string): Promise<MoviesResponse> => {
-  if (!import.meta.env.VITE_TMDB_TOKEN) {
-    throw new Error('TMDB API key is missing in environment variables');
-  }
-
-  try {
-    const response = await axios.get<MoviesResponse>(`${BASE_URL}/search/movie`, {
-      params: {
-        query,
-        include_adult: false,
-        language: 'en-US',
-        page: 1,
-      },
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
-      },
-      timeout: 10000
+export async function fetchTmdb(query: string): Promise<Movie[]> {
+    const response = await axios.get<MovieHttpResponse>("https://api.themoviedb.org/3/search/movie", {
+        params: {
+            query: query
+        },
+        headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+        }
     });
 
-    return response.data;
-  } catch (error) {
-    console.error('API Error:', error);
-    throw error;
-  }
-};
+    return response.data.results;
+}
